@@ -1,6 +1,8 @@
 class Person{
-  int xPos, yPos, floor;
+  float xPos, yPos; // floor 0 = waiting room, floor 1 = in-patient
+  int floor;
   color col;
+  
   
   Person(int fl, color c){
     this.floor = fl;
@@ -8,7 +10,9 @@ class Person{
   }
   
   void drawPerson(){
-    circle(this.xPos, this.yPos, 15);
-    
+    fill(this.col);
+    noStroke();
+    circle(xPos, yPos, 15);
+
   }
 }
