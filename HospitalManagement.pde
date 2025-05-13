@@ -40,7 +40,7 @@ void setup() {
   }
   
   for(int i = 0; i < numPatients; i++){
-    patients[i] = new Patient(1);
+    patients[i] = new Patient(1, 3); // hard coded patient info
   }
 
 
