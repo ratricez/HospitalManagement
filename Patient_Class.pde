@@ -1,8 +1,10 @@
 class Patient extends Person{
     Bed occupiedBed = null;
     Chair occupiedChair = null;
-    Patient(int fl){
+    int severity;
+    Patient(int fl, int sv){
       super(fl, color(255, 223, 179)); 
+      this.severity = sv;
     }
     
   
@@ -15,6 +17,16 @@ class Patient extends Person{
       this.xPos = this.occupiedChair.location.x + 15;
       this.yPos = this.occupiedChair.location.y + 15;
     }
+    
+  }
+  
+  boolean calcHealed(){
+    int base = 3; //base chance of 1/3
+    int chanceNum = base * this.severity;
+    if(int(random(chanceNum)) == 0){
+      return true;
+    }
+    else return false;
     
   }
   
