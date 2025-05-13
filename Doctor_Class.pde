@@ -14,11 +14,12 @@ class Doctor extends Person {
   }
 
   void update() {
-    if (bedIndex >= beds.length) return; 
+    if (bedIndex >= beds.length) return;
+
 
     if (Examing) {
       // Wait x seconds (1 sec = 1000 millisecs) have passed since waitStartTime
-      if (millis() - waitStartTime >= 2000) {
+      if (millis() - waitStartTime >= 200) {
         Examing = false;
         bedIndex++;
       }
@@ -38,6 +39,7 @@ class Doctor extends Person {
         }
       }
     }
+    drawPerson(); // Draw the doctor
     println("Visiting bed:", bedIndex, "Examing:", Examing);
   }
 }
