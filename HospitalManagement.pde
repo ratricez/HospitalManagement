@@ -4,12 +4,12 @@ int numofwaiting;
 Chair[] chairs;
 Bed[] beds;
 Patient[] patients;
+Doctor doctor;
 
 
 
 void setup() {
   size(1200, 600);
-  background(224, 214, 197);
   noStroke();
 
   chairs = new Chair[48];
@@ -42,13 +42,14 @@ void setup() {
   for(int i = 0; i < numPatients; i++){
     patients[i] = new Patient(1, 3); // hard coded patient info
   }
-
+  doctor = new Doctor(1, color(0, 0, 255), beds); // Blue doctor
 
       
 }
 
 void draw() {
   // Draw the background
+  background(224, 214, 197);
   stroke(255);
   line(350, 0, 350, 600);
   for (int i = 0; i < chairs.length; i++) {
@@ -87,7 +88,7 @@ void draw() {
     patients[i].drawPerson();
   }
 
-
+  doctor.update();
 
   // Text
   fill(255);
