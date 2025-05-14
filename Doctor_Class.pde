@@ -14,8 +14,9 @@ class Doctor extends Person {
   }
 
   void update() {
-    if (bedIndex >= beds.length) return;
-
+        if (bedIndex >= beds.length) {
+      bedIndex = 0; // Restart from the first bed
+     }
 
     if (Examing) {
       // Wait x seconds (1 sec = 1000 millisecs) have passed since waitStartTime
