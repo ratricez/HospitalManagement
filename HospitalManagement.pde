@@ -5,7 +5,7 @@ Chair[] chairs;
 Bed[] beds;
 Patient[] patients;
 Doctor doctor;
-
+ArrayList<Patient> waitingqueue = new ArrayList<Patient>();  // queue order
 
 
 void setup() {
@@ -61,31 +61,33 @@ void draw() {
   fill(125, 122, 114, 30);
   rect(20, 20, 300, 130, 10);
   
-  // Test person
-  for(int i = 0; i < numPatients; i++){
-    // Try to assign a bed
-    for (int j = 0; j < beds.length; j++) {
-        if (!beds[j].occupied) {
-            beds[j].occupied = true;
-            patients[i].occupiedBed = beds[j];
-            break;
-        }
-    }
-
-    // If bed assignment failed, try a chair
-    if (patients[i].occupiedBed == null) {
-         for(int k = 0; k < chairs.length; k++) {
-            if (!chairs[k].occupied && patients[i].occupiedChair == null) {
-                chairs[k].occupied = true;
-                patients[i].occupiedChair = chairs[k];
-                numofwaiting++;
+    for(int i = 0; i < numPatients; i++){
+      if (patients[i].done) continue;
+  
+        // Try to assign a bed
+        for (int j = 0; j < beds.length; j++) {
+            if (!beds[j].occupied) {
+                beds[j].occupied = true;
+                patients[i].occupiedBed = beds[j];
                 break;
             }
         }
-    }
+    
+        // If bed assignment failed, try a chair
+        if (patients[i].occupiedBed == null) {
+             for(int k = 0; k < chairs.length; k++) {
+                if (!chairs[k].occupied && patients[i].occupiedChair == null) {
+                    chairs[k].occupied = true;
+                    patients[i].occupiedChair = chairs[k];
+                    waitingqueue.add(patients[i]);
+                    numofwaiting++;
+                    break;
+                }
+            }
+        }
   
-    patients[i].goToOccupied();
-    patients[i].drawPerson();
+      patients[i].goToOccupied();
+      patients[i].drawPerson();
   }
 
   doctor.update();
