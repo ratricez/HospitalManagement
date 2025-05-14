@@ -1,9 +1,11 @@
 class Patient extends Person{
     Bed occupiedBed = null;
     Chair occupiedChair = null;
+    boolean done = false;
+
     int severity;
     Patient(int fl, int sv){
-      super(fl, color(255, 223, 179)); 
+      super(fl, color(random(0,255),random(0,255), random(0,255))); 
       this.severity = sv;
     }
     
