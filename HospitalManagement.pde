@@ -1,9 +1,10 @@
 import g4p_controls.*;
 int numPatients = 83;
+int numDoctors = 1;
 int numofwaiting;
 Chair[] chairs;
 Bed[] beds;
-Patient[] patients;
+ArrayList<Patient> patients;
 Doctor doctor;
 ArrayList<Patient> waitingqueue = new ArrayList<Patient>();  // queue order
 
@@ -14,7 +15,7 @@ void setup() {
 
   chairs = new Chair[48];
   beds = new Bed[60];
-  patients = new Patient[numPatients];
+  patients = new ArrayList<Patient>();
 
 
 
@@ -40,9 +41,9 @@ void setup() {
   }
   
   for(int i = 0; i < numPatients; i++){
-    patients[i] = new Patient(1, 3); // hard coded patient info
+    patients.add(new Patient(1, 1));
   }
-  doctor = new Doctor(1, color(0, 0, 255), beds); // Blue doctor
+  doctor = new Doctor(1, color(0, 0, 255)); // Blue doctor
 
       
 }
@@ -61,33 +62,33 @@ void draw() {
   fill(125, 122, 114, 30);
   rect(20, 20, 300, 130, 10);
   
-    for(int i = 0; i < numPatients; i++){
-      if (patients[i].done) continue;
+    for(int i = 0; i < patients.size(); i++){
+      if (patients.get(i).done) continue;
   
         // Try to assign a bed
         for (int j = 0; j < beds.length; j++) {
             if (!beds[j].occupied) {
                 beds[j].occupied = true;
-                patients[i].occupiedBed = beds[j];
+                patients.get(i).occupiedBed = beds[j];
                 break;
             }
         }
     
         // If bed assignment failed, try a chair
-        if (patients[i].occupiedBed == null) {
+        if (patients.get(i).occupiedBed == null) {
              for(int k = 0; k < chairs.length; k++) {
-                if (!chairs[k].occupied && patients[i].occupiedChair == null) {
+                if (!chairs[k].occupied && patients.get(i).occupiedChair == null) {
                     chairs[k].occupied = true;
-                    patients[i].occupiedChair = chairs[k];
-                    waitingqueue.add(patients[i]);
+                    patients.get(i).occupiedChair = chairs[k];
+                    waitingqueue.add(patients.get(i));
                     numofwaiting++;
                     break;
                 }
             }
         }
   
-      patients[i].goToOccupied();
-      patients[i].drawPerson();
+      patients.get(i).goToOccupied();
+      patients.get(i).drawPerson();
   }
 
   doctor.update();

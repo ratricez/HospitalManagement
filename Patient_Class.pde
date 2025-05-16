@@ -22,15 +22,15 @@ class Patient extends Person{
     
   }
   
-  boolean calcHealed(){
-    int base = 3; //base chance of 1/3
-    int chanceNum = base * this.severity;
-    if(int(random(chanceNum)) == 0){
-      return true;
-    }
-    else return false;
+    boolean calcHealed(){
+      int base = 3; //base chance of 1/3
+      int chanceNum = base * this.severity;
+      if(int(random(chanceNum)) == 0){
+        return true;
+      }
+      else return false;
     
-  }
+   }
   
 
 }
