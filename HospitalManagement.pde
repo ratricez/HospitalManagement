@@ -12,6 +12,8 @@ ArrayList<Patient> waitingqueue = new ArrayList<Patient>();  // queue order
 void setup() {
   size(1200, 600);
   noStroke();
+  createGUI();
+
 
   chairs = new Chair[48];
   beds = new Bed[60];
