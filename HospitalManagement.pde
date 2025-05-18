@@ -1,12 +1,17 @@
 import g4p_controls.*;
-int numPatients = 83;
-int numDoctors = 1;
+int numPatients = 68;
+int numDoctors;
 int numofwaiting;
 Chair[] chairs;
 Bed[] beds;
 ArrayList<Patient> patients;
 Doctor doctor;
+ArrayList<Doctor> doctors = new ArrayList<Doctor>();
 ArrayList<Patient> waitingqueue = new ArrayList<Patient>();  // queue order
+
+int tempDoctorvalue;
+boolean docSet; // only lets the person select number of doctors once
+int severity; // store value for each patient for GUI
 
 
 void setup() {
@@ -18,9 +23,6 @@ void setup() {
   chairs = new Chair[48];
   beds = new Bed[60];
   patients = new ArrayList<Patient>();
-
-
-
 
   for (int i = 0; i < chairs.length; i++) {
     int row = i / 8;
@@ -45,7 +47,7 @@ void setup() {
   for(int i = 0; i < numPatients; i++){
     patients.add(new Patient(1, 1));
   }
-  doctor = new Doctor(1, color(0, 0, 255)); // Blue doctor
+  //doctor = new Doctor(1, color(0, 0, 255)); // Blue doctor
 
       
 }
@@ -93,7 +95,14 @@ void draw() {
       patients.get(i).drawPerson();
   }
 
-  doctor.update();
+  //for (Patient p: patients) {
+  //  p.goToOccupied();
+  //  p.drawPerson();
+  //}
+
+  for (Doctor doc : doctors) {
+    doc.update();
+  }
 
   // Text
   fill(255);
