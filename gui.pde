@@ -37,12 +37,26 @@ public void SpawnPatient(GButton source, GEvent event) { //_CODE_:SpawnOne:69197
             break;
         }
     }
-
-    patients.add(newPatient);
 } //_CODE_:SpawnOne:691970:
 
 public void SpawnTenPatients(GButton source, GEvent event) { //_CODE_:SpawnTen:780667:
-  println("SpawnTen - GButton >> GEvent." + event + " @ " + millis());
+    for (int i = 0; i < 10; i++){
+      Patient newPatient = new Patient(1, severity);
+      patients.add(newPatient);
+  
+  
+      // Try to place in chair
+      for (Chair c : chairs) {
+          if (!c.occupied) {
+              c.occupied = true;
+              newPatient.occupiedChair = c;
+              waitingqueue.add(newPatient);
+              numofwaiting++;
+              break;
+          }
+      }
+    }
+
 } //_CODE_:SpawnTen:780667:
 
 public void numofdoctors(GCustomSlider source, GEvent event) { //_CODE_:DoctorNumber:907397:
