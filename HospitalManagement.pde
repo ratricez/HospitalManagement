@@ -9,9 +9,14 @@ Doctor doctor;
 ArrayList<Doctor> doctors = new ArrayList<Doctor>();
 ArrayList<Patient> waitingqueue = new ArrayList<Patient>();  // queue order
 
-int tempDoctorvalue;
+int tempDoctorvalue = 1;
+int tempBedvalue = 60;
+
 boolean docSet; // only lets the person select number of doctors once
+boolean bedSet; // only lets the person select number of doctors once
+
 int severity; // store value for each patient for GUI
+boolean simulationStarted = false;
 
 
 void setup() {
@@ -21,7 +26,6 @@ void setup() {
 
 
   chairs = new Chair[48];
-  beds = new Bed[60];
   patients = new ArrayList<Patient>();
 
   for (int i = 0; i < chairs.length; i++) {
@@ -34,15 +38,6 @@ void setup() {
 
   }
 
-
-   for (int i = 0; i < beds.length; i++) {
-    int row = i / 10;
-    int col = i % 10;
-    float x = 380 + col * 85;
-    float y = 40 + row * 100;
-    
-    beds[i] = new Bed(new PVector(x,y));
-  }
   
   for(int i = 0; i < numPatients; i++){
     patients.add(new Patient(1, 1));
@@ -56,6 +51,21 @@ void draw() {
   // Draw the background
   background(224, 214, 197);
   stroke(255);
+  
+  if (docSet == true && bedSet == true){
+    simulationStarted = true;
+  }
+  
+  if (simulationStarted == false){
+    textSize(20);
+    fill(0);
+    text("Finish selecting number of beds and doctors", 400, 280);
+    text("First select number of beds, then doctors", 413, 320);
+
+    return;
+  }
+
+  
   line(350, 0, 350, 600);
   for (int i = 0; i < chairs.length; i++) {
     chairs[i].drawMe();
@@ -65,6 +75,7 @@ void draw() {
   }
   fill(125, 122, 114, 30);
   rect(20, 20, 300, 130, 10);
+  println(tempDoctorvalue);
   
     for(int i = 0; i < patients.size(); i++){
       if (patients.get(i).done) continue;
