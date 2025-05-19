@@ -62,7 +62,7 @@
 //  }
 //}
 
-class Doctor extends Person {
+class Doctor extends Person {  
   int bedIndex;
   int lastCheckTime = 0;
   int checkInterval = 500; // ms between checks
@@ -72,16 +72,21 @@ class Doctor extends Person {
   int waitStartTime = 0;     // When the exam started
   int examDuration = 1000;   // How long doctor examines a patient (ms)
 
+  float targetX, targetY;    // Target position for smooth movement
+  float moveSpeed = 0.05f;  // Speed of smooth movement (lerp factor)
+  boolean movingToPatient = false; // Is doctor moving toward patient?
 
   Doctor(int fl, color c, int startIndex, int endIndex) {
     super(fl, c);
     this.startIndex = startIndex;
     this.endIndex = endIndex;
-    this.bedIndex = startIndex;
+    this.bedIndex = endIndex; // Start from bottom right
+    this.targetX = xPos;
+    this.targetY = yPos;
   }
 
   void update() {
-    int bedsToCheck = endIndex - startIndex + 1;
+    int bedsToCheck = endIndex - startIndex + 1; // number of beds
 
     // If currently examining a patient, handle timing and healing logic
     if (Examing) {
@@ -89,7 +94,7 @@ class Doctor extends Person {
         Bed currentBed = beds[bedIndex];
         Patient patientInBed = null;
 
-        for (Patient p : patients) {
+        for (Patient p : patients) { // check for which patient is in the bed
           if (p.occupiedBed == currentBed) {
             patientInBed = p;
             break;
@@ -101,15 +106,25 @@ class Doctor extends Person {
             // Patient healed — free bed and remove patient
             currentBed.occupied = false;
             patients.remove(patientInBed);
-            freeBeds.add(currentBed);
+
+            // Assign next waiting patient to this freed bed
+            if (!waitingqueue.isEmpty()) {
+              Patient next = waitingqueue.remove(0);
+              next.occupiedChair.occupied = false;
+              next.occupiedChair = null;
+              next.occupiedBed = currentBed;
+              currentBed.occupied = true;
+              next.col = color(0);
+              numofwaiting--;
+            }
           }
         }
 
-        // End exam and move to next bed
+        // End exam and move to previous bed (right to left)
         Examing = false;
-        bedIndex++;
-        if (bedIndex > endIndex) {
-          bedIndex = startIndex;
+        bedIndex--;
+        if (bedIndex < startIndex) {
+          bedIndex = endIndex; // wrap around
         }
       }
       // Draw doctor while examining
@@ -117,7 +132,26 @@ class Doctor extends Person {
       return;
     }
 
-    // Not examining: check timing interval before moving on
+    // If doctor is moving toward patient, update position smoothly
+    if (movingToPatient) {
+      xPos = lerp(xPos, targetX, moveSpeed);
+      yPos = lerp(yPos, targetY, moveSpeed);
+
+      // Check if doctor arrived at patient
+      if (dist(xPos, yPos, targetX, targetY) < 1) {
+        xPos = targetX;
+        yPos = targetY;
+        movingToPatient = false;
+
+        Examing = true;
+        waitStartTime = millis();
+      }
+
+      drawPerson();
+      return;
+    }
+
+    // Not examining and not moving — check interval timing before next bed check
     if (millis() - lastCheckTime < checkInterval) {
       drawPerson();
       return;
@@ -141,28 +175,25 @@ class Doctor extends Person {
         }
 
         if (patientInBed != null) {
-          // Move doctor to patient
-          xPos = patientInBed.xPos - 15;
-          yPos = patientInBed.yPos - 15;
-
-          // Start examining patient
-          Examing = true;
-          waitStartTime = millis();
+          // Set target position near patient and start moving
+          targetX = patientInBed.xPos - 15;
+          targetY = patientInBed.yPos - 15;
+          movingToPatient = true;
 
           drawPerson();
-          return; // start exam this frame, done for now
+          return; // movement starts this frame, done for now
         }
       }
 
-      // Bed unoccupied or no patient found, check next bed
-      bedIndex++;
-      if (bedIndex > endIndex) {
-        bedIndex = startIndex;
+      // Move to previous bed (right to left)
+      bedIndex--;
+      if (bedIndex < startIndex) { // wrap around to end
+        bedIndex = endIndex;
       }
       checkedBeds++;
     }
 
-    // draw doctor at current position
+    // If no patients found, just draw doctor in current position
     drawPerson();
   }
 }
