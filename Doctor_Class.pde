@@ -6,7 +6,8 @@ class Doctor extends Person {
 
   boolean Examing = false;   // Is the doctor currently examining a patient?
   int waitStartTime = 0;     // When the exam started
-  int examDuration = 1000;   // How long doctor examines a patient (ms)
+  int examDuration = 300;   // How long doctor examines a patient (ms)
+  float energy = 1;
 
   float targetX, targetY;    // Target position for smooth movement
   float moveSpeed = 0.05f;  // Speed of smooth movement (lerp factor)
@@ -27,7 +28,7 @@ class Doctor extends Person {
 
     // If currently examining a patient, handle timing and healing logic
     if (Examing) {
-      if (millis() - waitStartTime >= examDuration) {
+      if (millis() - waitStartTime >= examDuration/energy) {
         Bed currentBed = beds[bedIndex];
         Patient patientInBed = null;
 
@@ -39,6 +40,7 @@ class Doctor extends Person {
         }
 
         if (patientInBed != null) {
+          if(energy - 0.05 > 0.1) energy -= 0.05;
           if (patientInBed.calcHealed()) {
             // Patient healed — free bed and remove patient
             currentBed.occupied = false;
