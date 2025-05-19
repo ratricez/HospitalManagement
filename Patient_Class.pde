@@ -2,6 +2,7 @@ class Patient extends Person {
     Bed occupiedBed = null;
     Chair occupiedChair = null;
     boolean done = false;
+    int base = 3; 
 
     int severity;
 
@@ -46,7 +47,6 @@ class Patient extends Person {
     }
   
     boolean calcHealed(){
-      int base = 3;
       int chanceNum = base * this.severity;
       println(chanceNum);
       if(int(random(chanceNum)) == 0){
