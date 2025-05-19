@@ -52,14 +52,40 @@ public void numofdoctors(GCustomSlider source, GEvent event) { //_CODE_:DoctorNu
 public void confirmnumber(GButton source, GEvent event) { //_CODE_:confirmnumberdoc:567316:
   if (docSet == false){
     numDoctors = int(tempDoctorvalue);
+    int bedsPerDoctor = beds.length/numDoctors;
+    
     for (int i = 0; i< numDoctors; i++){
-      int start = (i*(beds.length/numDoctors));
-      int end = start+(beds.length/numDoctors)-1;
+      int start = (i*bedsPerDoctor);
+      int end = start+bedsPerDoctor-1;
+      if (i == numDoctors-1){
+        end = beds.length-1;
+      }
       doctors.add(new Doctor(1, color(0, 0, 255 - i * 100), start, end));
     }
     docSet = true;
   }
 } //_CODE_:confirmnumberdoc:567316:
+
+public void numofbeds(GCustomSlider source, GEvent event) { //_CODE_:BedNumber:726698:
+  tempBedvalue = source.getValueI();
+} //_CODE_:BedNumber:726698:
+
+public void confirmBedNum(GButton source, GEvent event) { //_CODE_:bedConfirm:550370:
+
+  if (bedSet == false){
+    beds = new Bed[tempBedvalue];
+    for (int i = 0; i < beds.length; i++) {
+      int row = i / 10;
+      int col = i % 10;
+      float x = 380 + col * 85;
+      float y = 40 + row * 70;
+      
+      beds[i] = new Bed(new PVector(x,y));
+    }
+    bedSet = true;
+
+  }
+} //_CODE_:bedConfirm:550370:
 
 
 
@@ -70,17 +96,16 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Sketch Window");
-  window1 = GWindow.getWindow(this, "Window title", 0, 0, 320, 240, JAVA2D);
+  window1 = GWindow.getWindow(this, "Window title", 0, 0, 320, 300, JAVA2D);
   window1.noLoop();
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw1");
-  label1 = new GLabel(window1, 16, 16, 80, 20);
+  label1 = new GLabel(window1, 16, 31, 80, 20);
   label1.setText("Patients");
   label1.setOpaque(false);
   Severity = new GCustomSlider(window1, 16, 48, 100, 50, "grey_blue");
   Severity.setShowValue(true);
   Severity.setLimits(2, 1, 3);
-  Severity.setShowTicks(true);
   Severity.setNumberFormat(G4P.INTEGER, 0);
   Severity.setOpaque(false);
   Severity.addEventHandler(this, "getseverity");
@@ -90,15 +115,30 @@ public void createGUI(){
   SpawnTen = new GButton(window1, 220, 60, 80, 30);
   SpawnTen.setText("Spawn Ten");
   SpawnTen.addEventHandler(this, "SpawnTenPatients");
-  DoctorNumber = new GCustomSlider(window1, 16, 112, 100, 50, "grey_blue");
+  DoctorNumber = new GCustomSlider(window1, 16, 176, 100, 50, "grey_blue");
   DoctorNumber.setShowValue(true);
   DoctorNumber.setLimits(1, 1, 5);
   DoctorNumber.setNumberFormat(G4P.INTEGER, 0);
   DoctorNumber.setOpaque(false);
   DoctorNumber.addEventHandler(this, "numofdoctors");
-  confirmnumberdoc = new GButton(window1, 128, 128, 80, 30);
+  confirmnumberdoc = new GButton(window1, 130, 190, 80, 30);
   confirmnumberdoc.setText("Confirm");
   confirmnumberdoc.addEventHandler(this, "confirmnumber");
+  BedNumber = new GCustomSlider(window1, 16, 112, 100, 50, "grey_blue");
+  BedNumber.setShowValue(true);
+  BedNumber.setLimits(60, 40, 80);
+  BedNumber.setNumberFormat(G4P.INTEGER, 0);
+  BedNumber.setOpaque(false);
+  BedNumber.addEventHandler(this, "numofbeds");
+  bedConfirm = new GButton(window1, 130, 120, 80, 30);
+  bedConfirm.setText("Confirm");
+  bedConfirm.addEventHandler(this, "confirmBedNum");
+  BedsLabel = new GLabel(window1, 17, 96, 112, 20);
+  BedsLabel.setText("Num. of Beds");
+  BedsLabel.setOpaque(false);
+  DoctorsLabel = new GLabel(window1, 17, 162, 104, 20);
+  DoctorsLabel.setText("Num. of Doctors");
+  DoctorsLabel.setOpaque(false);
   window1.loop();
 }
 
@@ -111,3 +151,7 @@ GButton SpawnOne;
 GButton SpawnTen; 
 GCustomSlider DoctorNumber; 
 GButton confirmnumberdoc; 
+GCustomSlider BedNumber; 
+GButton bedConfirm; 
+GLabel BedsLabel; 
+GLabel DoctorsLabel; 
