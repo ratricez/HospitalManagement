@@ -104,6 +104,10 @@ void draw() {
     doc.update();
   }
 
+  for (Patient p : patients) {
+    p.moveToTarget();
+  }
+
   for (int i = freeBeds.size() - 1; i >= 0; i--) { // Bed assignment
     Bed b = freeBeds.get(i);
     if (!b.occupied && !waitingqueue.isEmpty()) {
@@ -116,6 +120,13 @@ void draw() {
       numofwaiting--;
     }
   }
+
+  // === A door where patients enter from (bottom-left) ===
+  fill(160, 82, 45); // door color (brown)
+  stroke(100); strokeWeight(2);
+  // Door base
+  rect(305, 580, 35, 50); // door rectangle at (325 - 20, 600 - 50)
+
   // Text box
   fill(255);
   textSize(16);
