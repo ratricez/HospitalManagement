@@ -46,6 +46,7 @@ class Patient extends Person {
     }
   
     boolean calcHealed(){
+      int base = 3;
       int chanceNum = base * this.severity;
       println(chanceNum);
       if(int(random(chanceNum)) == 0){
