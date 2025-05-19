@@ -1,5 +1,5 @@
 import g4p_controls.*;
-int numPatients = 68;
+int numPatients = 0;
 int numDoctors;
 int numofwaiting;
 Chair[] chairs;
@@ -8,9 +8,10 @@ ArrayList<Patient> patients;
 Doctor doctor;
 ArrayList<Doctor> doctors = new ArrayList<Doctor>();
 ArrayList<Patient> waitingqueue = new ArrayList<Patient>();  // queue order
+ArrayList<Bed> freeBeds = new ArrayList<Bed>();
 
-int tempDoctorvalue = 1;
-int tempBedvalue = 60;
+int tempDoctorvalue = 1; // starting value, in case they don't move the slider
+int tempBedvalue = 60; // same thing but forr beds
 
 boolean docSet; // only lets the person select number of doctors once
 boolean bedSet; // only lets the person select number of doctors once
@@ -35,16 +36,11 @@ void setup() {
     float y = 180 + row * 70;
 
     chairs[i] = new Chair(new PVector(x, y));
-
   }
 
-  
   for(int i = 0; i < numPatients; i++){
     patients.add(new Patient(1, 1));
   }
-  //doctor = new Doctor(1, color(0, 0, 255)); // Blue doctor
-
-      
 }
 
 void draw() {
@@ -52,11 +48,11 @@ void draw() {
   background(224, 214, 197);
   stroke(255);
   
-  if (docSet == true && bedSet == true){
+  if (docSet == true && bedSet == true){ // once both values have been set, start animation
     simulationStarted = true;
   }
   
-  if (simulationStarted == false){
+  if (simulationStarted == false){ // while they haven't selected starting values, don't run animation
     textSize(20);
     fill(0);
     text("Finish selecting number of beds and doctors", 400, 280);
@@ -65,7 +61,14 @@ void draw() {
     return;
   }
 
-  
+  freeBeds.clear(); // everytime, recheck empty beds
+  for (int i = 0; i < beds.length; i++) {
+    if (!beds[i].occupied) {
+      freeBeds.add(beds[i]);
+    }
+  }
+
+  // Drawing the scene
   line(350, 0, 350, 600);
   for (int i = 0; i < chairs.length; i++) {
     chairs[i].drawMe();
@@ -73,23 +76,14 @@ void draw() {
   for(int i = 0; i < beds.length; i++){
         beds[i].drawMe();
   }
+  
   fill(125, 122, 114, 30);
   rect(20, 20, 300, 130, 10);
-  println(tempDoctorvalue);
   
     for(int i = 0; i < patients.size(); i++){
       if (patients.get(i).done) continue;
-  
-        // Try to assign a bed
-        for (int j = 0; j < beds.length; j++) {
-            if (!beds[j].occupied) {
-                beds[j].occupied = true;
-                patients.get(i).occupiedBed = beds[j];
-                break;
-            }
-        }
     
-        // If bed assignment failed, try a chair
+        // Chair assignment
         if (patients.get(i).occupiedBed == null) {
              for(int k = 0; k < chairs.length; k++) {
                 if (!chairs[k].occupied && patients.get(i).occupiedChair == null) {
@@ -106,23 +100,27 @@ void draw() {
       patients.get(i).drawPerson();
   }
 
-  //for (Patient p: patients) {
-  //  p.goToOccupied();
-  //  p.drawPerson();
-  //}
-
-  for (Doctor doc : doctors) {
+  for (Doctor doc : doctors) { // Drawing doctors
     doc.update();
   }
 
-  // Text
+  for (int i = freeBeds.size() - 1; i >= 0; i--) { // Bed assignment
+    Bed b = freeBeds.get(i);
+    if (!b.occupied && !waitingqueue.isEmpty()) {
+      Patient next = waitingqueue.remove(0);
+      next.occupiedChair.occupied = false;
+      next.occupiedChair = null;
+      next.occupiedBed = b;
+      b.occupied = true;
+      next.col = color(0);
+      numofwaiting--;
+    }
+  }
+  // Text box
   fill(255);
   textSize(16);
   text("Information Card:", 35, 45);
   textSize(14);
   text("Waiting Room: " + numofwaiting, 35, 70);
 
-
 }
-
-//300, 450, 450
