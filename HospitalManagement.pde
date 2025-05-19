@@ -16,7 +16,7 @@ int tempBedvalue = 60; // same thing but forr beds
 boolean docSet; // only lets the person select number of doctors once
 boolean bedSet; // only lets the person select number of doctors once
 
-int severity; // store value for each patient for GUI
+int severity=2; // store value for each patient for GUI
 boolean simulationStarted = false;
 
 
