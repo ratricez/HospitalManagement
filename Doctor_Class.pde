@@ -2,29 +2,46 @@
 //  int patIndex = 0;    // which bed doc visiting
 //  boolean Examing = false;
 //  int waitStartTime = 0; //Stores time the doc started examining (used to time how long they examine)
-  
+//  int startIndex = 0;
+//  int endIndex = 10;
 
-//  Doctor(int fl, color c) {
+//  Doctor(int fl, color c) { // change input later to include startindex and endindex
 //    super(fl, c);
 //  }
 
 //  void update() {
-//      if (patIndex >= patients.size()) {
-//        patIndex = 0; // Restart from the first patient
-//     }
-
-//    if (Examing && patients.get(patIndex).occupiedBed != null) {
-//      if (millis() - waitStartTime >= 1000) {
-//        if (patients.get(patIndex).calcHealed()) {
-//          patients.remove(patIndex);
-//          Examing = false;
-//          // Don't increment patIndex here because the next patient will shift into this index
-//        } else {
-//          Examing = false;
-//          patIndex++;
-//        }
+//      if (patients.size() == 0 || bedIndex > endIndex || bedIndex >= patients.size()) {
+//        bedIndex = startIndex;
+//        return;
 //      }
-//  } else {
+
+//      if (Examing && patients.get(patIndex).occupiedBed != null) {
+//        if (millis() - waitStartTime >= 500) {
+//          if (patients.get(patIndex).calcHealed()) {
+//            Bed freedBed = patients.get(patIndex).occupiedBed;
+//            freedBed.occupied = false;
+          
+//            // Remove the healed patient
+//            patients.remove(patIndex);
+//            Examing = false;
+          
+//            // Now assign the freed bed to first person in queue
+//            if (!waitingqueue.isEmpty()) {
+//              Patient nextPatient = waitingqueue.remove(0); // First in, first out... (not by chair spot)
+//              nextPatient.occupiedChair.occupied = false;
+//              nextPatient.occupiedChair = null;
+//              nextPatient.occupiedBed = freedBed;
+//              nextPatient.col = color(0); //testing stuff
+//              freedBed.occupied = true;
+//              numofwaiting--;
+//            }          
+//            // Don't increment patIndex here because the next patient will shift into this index
+//            } else {
+//              Examing = false;
+//              patIndex++;
+//            }
+//        }
+//    } else {
 //    // Move to next bed
 //    if (patIndex < patients.size() && patients.get(patIndex).occupiedBed != null) {
 //      // move horizontally
@@ -32,7 +49,7 @@
 //      yPos = patients.get(patIndex).yPos - 15; 
       
 //      // If occupied, start examining. If not, next bed.
-//      if (patients.get(patIndex).occupiedBed != null) { //<>//
+//      if (patients.get(patIndex).occupiedBed != null) {
 //        Examing = true;
 //        waitStartTime = millis(); // Store current time
 //      } else {
@@ -64,7 +81,7 @@ class Doctor extends Person {
   }
 
   void update() {
-    int bedsToCheck = endIndex - startIndex + 1; // number of beds
+    int bedsToCheck = endIndex - startIndex + 1;
 
     // If currently examining a patient, handle timing and healing logic
     if (Examing) {
@@ -72,7 +89,7 @@ class Doctor extends Person {
         Bed currentBed = beds[bedIndex];
         Patient patientInBed = null;
 
-        for (Patient p : patients) { // check for which patient is in the bed
+        for (Patient p : patients) {
           if (p.occupiedBed == currentBed) {
             patientInBed = p;
             break;
@@ -84,17 +101,7 @@ class Doctor extends Person {
             // Patient healed — free bed and remove patient
             currentBed.occupied = false;
             patients.remove(patientInBed);
-
-            // Assign next waiting patient to this freed bed
-            if (!waitingqueue.isEmpty()) {
-              Patient next = waitingqueue.remove(0);
-              next.occupiedChair.occupied = false;
-              next.occupiedChair = null;
-              next.occupiedBed = currentBed;
-              currentBed.occupied = true;
-              next.col = color(0);
-              numofwaiting--;
-            }
+            freeBeds.add(currentBed);
           }
         }
 
@@ -147,14 +154,15 @@ class Doctor extends Person {
         }
       }
 
-      // Check the next bed if no one
+      // Bed unoccupied or no patient found, check next bed
       bedIndex++;
-      if (bedIndex > endIndex) { // if they have reached a bed outside their range of beds, go back to first
+      if (bedIndex > endIndex) {
         bedIndex = startIndex;
       }
       checkedBeds++;
     }
 
+    // draw doctor at current position
     drawPerson();
   }
 }
