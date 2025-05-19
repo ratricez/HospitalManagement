@@ -123,7 +123,7 @@ void draw() {
 
   // === A door where patients enter from (bottom-left) ===
   fill(160, 82, 45); // door color (brown)
-  stroke(100); strokeWeight(2);
+  stroke(100);
   // Door base
   rect(305, 580, 35, 50); // door rectangle at (325 - 20, 600 - 50)
 
