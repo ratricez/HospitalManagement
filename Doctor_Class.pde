@@ -42,10 +42,12 @@ class Doctor extends Person {
         if (patientInBed != null) {
           if(energy - 0.05 > 0.1) energy -= 0.05;
           if (patientInBed.calcHealed()) {
-            // Patient healed — free bed and remove patient
+            // Patient healed — free bed and send to exit
             currentBed.occupied = false;
-            patients.remove(patientInBed);
             freeBeds.add(currentBed);
+
+            patientInBed.occupiedBed = null;
+            patientInBed.exitHospital();  // Triggers movement to door
           }
         }
 
