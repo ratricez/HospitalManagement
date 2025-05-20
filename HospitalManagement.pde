@@ -116,7 +116,7 @@ void draw() {
       next.occupiedChair = null;
       next.occupiedBed = b;
       b.occupied = true;
-      next.col = color(0);
+      //next.col = color(0);
       numofwaiting--;
     }
   }
