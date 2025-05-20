@@ -2,6 +2,8 @@ class Patient extends Person {
     Bed occupiedBed = null;
     Chair occupiedChair = null;
     boolean done = false;
+    boolean exiting = false;
+
     int base = 3; 
 
     int severity;
@@ -53,8 +55,18 @@ class Patient extends Person {
                 xPos = targetX;
                 yPos = targetY;
                 movingToTarget = false;
+                if (exiting) {
+                  done = true;  // tells main loop it's ok to remove patient
             }
         }
+    }
+}
+
+    void exitHospital() {
+      targetX = 325;
+      targetY = 600;
+      movingToTarget = true;
+      exiting = true;
     }
   
     boolean calcHealed(){
