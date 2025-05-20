@@ -80,25 +80,33 @@ void draw() {
   fill(125, 122, 114, 30);
   rect(20, 20, 300, 130, 10);
   
-    for(int i = 0; i < patients.size(); i++){
-      if (patients.get(i).done) continue;
-    
-        // Chair assignment
-        if (patients.get(i).occupiedBed == null) {
-             for(int k = 0; k < chairs.length; k++) {
-                if (!chairs[k].occupied && patients.get(i).occupiedChair == null) {
-                    chairs[k].occupied = true;
-                    patients.get(i).occupiedChair = chairs[k];
-                    waitingqueue.add(patients.get(i));
-                    numofwaiting++;
-                    break;
-                }
-            }
+  for (int i = patients.size() - 1; i >= 0; i--) {
+    patients.get(i).moveToTarget();
+
+    if (patients.get(i).done && patients.get(i).exiting && !patients.get(i).movingToTarget) {
+      patients.remove(i);
+      continue;
+      
+    } if (patients.get(i).done && !patients.get(i).exiting) {
+      patients.get(i).exitHospital();
+      
+    } if (patients.get(i).occupiedBed == null && patients.get(i).occupiedChair == null && !patients.get(i).exiting) {
+      // Chair assignment
+      for (int k = 0; k < chairs.length; k++) {
+        if (!chairs[k].occupied) {
+          chairs[k].occupied = true;
+          patients.get(i).occupiedChair = chairs[k];
+          waitingqueue.add(patients.get(i));
+          numofwaiting++;
+          break;
         }
-  
-      patients.get(i).goToOccupied();
-      patients.get(i).drawPerson();
-  }
+      }
+    }
+
+    patients.get(i).goToOccupied();
+    patients.get(i).drawPerson();
+    
+    }
 
   for (Doctor doc : doctors) { // Drawing doctors
     doc.update();
