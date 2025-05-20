@@ -18,6 +18,17 @@ class Patient extends Person {
         // Start all patients at the bottom-left corner
         this.xPos = 325;
         this.yPos = 600;
+
+         // Assign color based on severity [Medical Triage]
+        if (severity == 1) {
+            this.col = color(0, 255, 0);      // Green = can be delayed 
+        } else if (severity == 2) {
+            this.col = color(245, 255, 0);   // Yellow = urgent/as soon as possible
+        } else if (severity == 3) {
+            this.col = color(255, 0, 0);    // Red = Emergency 
+        } else {
+            this.col = color(100);         // Default gray
+          }
     }
 
     void goToOccupied() {
