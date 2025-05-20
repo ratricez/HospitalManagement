@@ -12,7 +12,7 @@ class Patient extends Person {
     float moveSpeed = 0.02; // Controls smoothness and speed of movement
 
     Patient(int fl, int sv) {
-        super(fl, color(random(0, 255), random(0, 255), random(0, 255))); 
+        super(fl, color(100)); 
         this.severity = sv;
 
         // Start all patients at the bottom-left corner
