@@ -178,24 +178,24 @@ void draw() {
   text("Information Card:", 35, 45);
   textSize(14);
   
-  text("Waiting Room: " + min(numofwaiting, 48), 35, 70);
-  text("Waiting Outside: " + max(numofwaiting - 48, 0), 35, 85);
+  text("Waiting Room: " + min(numofwaiting, 48), 35, 70);// If the total number of people waiting is larger then 48, therefore there is overflow (outside)
+  text("Waiting Outside: " + max(numofwaiting - 48, 0), 35, 85); // Check if overflow (outside)
 
-  text("Doctors Exhaustion: " + nf(calculateDocAvgExhaustion(), 1, 2), 35, 105);
+  text("Doctors Exhaustion: " + nf(calculateDocAvgExhaustion(), 1, 2), 35, 105); // Call function to calculate the value and "round" it
   text("Total Healed: " + totalhealed, 35, 120);
 
   text("Expected Waiting Time: " + nf(floor((getRecentAverageWaitTimes(10) / 3000) * 10), 1, 1) + "mins", 35, 140 );
 
   fill(70, 70, 70);
   stroke(255);
-  rect(155, 30, 160, 50, 10);
-  mins = floor((millis() - startTime) / 3000) * 10;
-  if (mins >= 60){
+  rect(210, 30, 100, 50, 10); // Time box
+  mins = floor((millis() - startTime) / 3000) * 10; // Calculating the time
+  if (mins >= 60){ // If the minutes is over 60, reset it back to 0
     hours += 1;
     mins = 0;
     startTime = millis();
   }
   fill(255);
   textSize(28);
-  text(nf(hours, 2) + ":" + nf(mins,2), 205, 67);
+  text(nf(hours, 2) + ":" + nf(mins,2), 230, 67); // Display time
 }
