@@ -1,4 +1,4 @@
-import g4p_controls.*; //<>//
+import g4p_controls.*;
 int numPatients = 0; // start off with no patients as they are added
 int numDoctors;
 int numofwaiting;
@@ -106,6 +106,7 @@ void draw() {
   }
   
   fill(125, 122, 114, 30);
+  stroke(150, 100, 50);
   rect(20, 20, 300, 130, 10); // top left console box
   
   for (int i = patients.size() - 1; i >= 0; i--) { // go backwards through patient list
@@ -173,7 +174,7 @@ void draw() {
   rect(305, 580, 35, 50);
 
   // Text box (top left box)
-  fill(255);
+  fill(150, 100, 50);
   textSize(16);
   text("Information Card:", 35, 45);
   textSize(14);
@@ -188,14 +189,14 @@ void draw() {
 
   fill(70, 70, 70);
   stroke(255);
-  rect(210, 30, 100, 50, 10); // Time box
-  mins = floor((millis() - startTime) / 3000) * 10; // Calculating the time
-  if (mins >= 60){ // If the minutes is over 60, reset it back to 0
+  rect(210, 30, 100, 50, 10);
+  mins = floor((millis() - startTime) / 3000) * 10;
+  if (mins >= 60){
     hours += 1;
     mins = 0;
     startTime = millis();
   }
   fill(255);
   textSize(28);
-  text(nf(hours, 2) + ":" + nf(mins,2), 230, 67); // Display time
+  text(nf(hours, 2) + ":" + nf(mins,2), 230, 67);
 }
