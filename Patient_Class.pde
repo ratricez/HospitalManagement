@@ -27,7 +27,7 @@ class Patient extends Person {
         this.xPos = 325;
         this.yPos = 600;
 
-         // Assign color based on severity [Medical Triage]
+         // Assign color based on severity 
         if (severity == 1) {
             this.col = color(0, 255, 0);      // Green = can be delayed 
         } else if (severity == 2) {
@@ -42,7 +42,7 @@ class Patient extends Person {
         
     }
 
-    void goToOccupied() {
+    void goToOccupied() { // Go to either a bed or chair (position target)
         if (this.occupiedBed != null) {
             targetX = this.occupiedBed.location.x + 15;
             targetY = this.occupiedBed.location.y + 15;
@@ -79,12 +79,12 @@ class Patient extends Person {
     }
   
     boolean calcHealed(){
-      int chanceNum = base * this.severity;
+      int chanceNum = base * this.severity; // chances change depending on severity
       if(int(random(chanceNum)) == 0){
         return true;
       }
       else{
-            if(base - 1 != 0) base -= 1;
+            if(base - 1 != 0) base -= 1; // everytime they don't heal, make it slightly more likely
             return false;
     }
     
