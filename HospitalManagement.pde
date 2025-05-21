@@ -151,8 +151,8 @@ void draw() {
     Bed b = freeBeds.get(i); // Free bed...
     if (!b.occupied && !waitingqueue.isEmpty()) { // As long as it is actually a free bed
       Patient next = waitingqueue.remove(0); // Take the next person in line and remove them from the waiting queue
-      if(!next.timeRecorded){
-        int waitingTime = millis() - next.enteredWaitTime;
+      if(!next.timeRecorded){ //if the nth patient hasn't had their time recorded already
+        int waitingTime = millis() - next.enteredWaitTime; //finding difference between current milli count and milli count from when the pat. entered
         waitingTimes.add(waitingTime);
         totalWaitingTime += waitingTime;
         patientsServed ++;
