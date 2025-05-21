@@ -84,8 +84,8 @@ void draw() {
   if (simulationStarted == false){ // while they haven't selected starting values, don't run animation
     textSize(20);
     fill(0);
-    text("Finish selecting number of beds and doctors", 400, 280);
-    text("First select number of beds, then doctors", 413, 320);
+    text("Welcome to MediVos.", 520, 280);
+    text("Please first select and confirm your number of beds, then doctors", 350, 320);
     return;
   }
 
