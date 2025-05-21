@@ -179,12 +179,12 @@ void draw() {
   textSize(14);
   
   text("Waiting Room: " + min(numofwaiting, 48), 35, 70);
-  text("Waiting Outside: " + max(numofwaiting - 48, 0), 35, 90);
+  text("Waiting Outside: " + max(numofwaiting - 48, 0), 35, 85);
 
-  text("Doctors Exhaustion: " + nf(calculateDocAvgExhaustion(), 1, 2), 35, 110);
-  text("Total Healed: " + totalhealed, 35, 130);
+  text("Doctors Exhaustion: " + nf(calculateDocAvgExhaustion(), 1, 2), 35, 105);
+  text("Total Healed: " + totalhealed, 35, 120);
 
-  text("Expected Waiting Time: " + nf(floor((getRecentAverageWaitTimes(10) / 3000) * 10), 1, 1) + "mins", 35, 145 );
+  text("Expected Waiting Time: " + nf(floor((getRecentAverageWaitTimes(10) / 3000) * 10), 1, 1) + "mins", 35, 140 );
 
   fill(70, 70, 70);
   stroke(255);
