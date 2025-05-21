@@ -67,7 +67,7 @@ float getRecentAverageWaitTimes(int recentSpan){
     count ++;
   }
   
-  return count > 0 ? float(total) / count : 0.0;
+  return count > 0 ? float(total) / count : 0.0; //if count is greater than 0, return total, otherwise return 0.0
   
 }
 
