@@ -1,69 +1,63 @@
 class Doctor extends Person {
+  int bedIndex;
   int lastCheckTime = 0;
   int checkInterval = 500; // ms between checks
-
+  int startIndex, endIndex;
   boolean Examing = false;   // Is the doctor currently examining a patient?
   int waitStartTime = 0;     // When the exam started
   int examDuration = 600;   // How long doctor examines a patient (ms)
   float energy = 1;
-
   float targetX, targetY;    // Target position for smooth movement
   float moveSpeed = 0.05f;  // Speed of smooth movement (lerp factor)
   boolean movingToPatient = false; // Is doctor moving toward patient?
-  ArrayList<Patient> docPatients = new ArrayList<Patient>(); // Doctor's patients
+  ArrayList<Patient> docPatients = new ArrayList<Patient>();
   Patient currentPatient = null;
-  int patientIndex = 0;
-
+  int currentPatientIndex = 0; // Track which patient we're currently examining
+  
   Doctor(int fl, color c) {
     super(fl, c);
     this.targetX = xPos;
     this.targetY = yPos;
   }
-
+  
   void update() {
-    if (Examing) { // If the doctor is examining a patient
-    // Check the total time is bigger than enough time for exam (based on doctors energy)
-      if (millis() - waitStartTime >= examDuration / energy) {
-        Patient patient = currentPatient; // Find the current patient
-
-        // If the patient exists and is in a bed
-        if (patient != null && patient.occupiedBed != null) {
-          if (energy - 0.01 > 0.1) { // Reduce the doctor's energy slightly after each exam
+    if (Examing) {  // If examination is happening
+      // If we are finished an exam...
+      if (millis() - waitStartTime >= examDuration / energy) { 
+        Patient patient = currentPatient; // Get the current patient
+        if (patient != null && patient.occupiedBed != null) { // As long as the patient exists and is in a bed...
+          if (energy - 0.05 > 0.1) { // Reduce the doctor's energy after each exam
             energy -= 0.05;
           }
           
-          // If the patient is healed...
+          // If the patient is healed
           if (patient.calcHealed()) {
             Bed bed = patient.occupiedBed;
             bed.occupied = false;
-            freeBeds.add(bed); // Add their bed to empty beds
+            freeBeds.add(bed); // Add their bed to the empty beds
             totalhealed++; // Increase the total count for healed patients
-            patient.occupiedBed = null; // No longer in a bed
-            patient.exitHospital(); // Make the healed patient leave
-            docPatients.remove(patient); // Remove them from the list
+            patient.occupiedBed = null; // No more bed for said patient
+            patient.exitHospital(); // The healed patient can go home!
+            docPatients.remove(patient); // Remove them
+            // If we remove the current patient, we need to adjust the index (stop bugs)
+            if (currentPatientIndex > 0) {
+              currentPatientIndex--;
+            }
           }
         }
-        // Reset the examining state
-        Examing = false;
+        Examing = false; // Stop examining
         currentPatient = null;
-
-        // Move to the next patient
-        if (patientIndex >= docPatients.size()) {
-          patientIndex = 0;
-        }
+        // Move to next patient
       }
-
-      drawPerson(); // Draw doctor
+      drawPerson();
       return;
     }
-
-    // If the doctor is moving...
+    
+    // Move to a patient
     if (movingToPatient) {
-      // Smoothly move towards target
+      // Allows smooth movement towards patient/target
       xPos = lerp(xPos, targetX, moveSpeed);
       yPos = lerp(yPos, targetY, moveSpeed);
-
-      // Check if they have arrived at the patient
       if (dist(xPos, yPos, targetX, targetY) < 1) {
         xPos = targetX;
         yPos = targetY;
@@ -71,43 +65,37 @@ class Doctor extends Person {
         Examing = true;
         waitStartTime = millis();
       }
-
       drawPerson();
       return;
     }
-
-    // If not enough time has happened for the exam, return
+    
+    // Check if it's time to find a new patient (by time intervals)
     if (millis() - lastCheckTime < checkInterval) {
       drawPerson();
       return;
     }
-    lastCheckTime = millis(); // Update the last time checked
-
-    // If the doctor has someone...
-    if (docPatients.size() > 0) {
-      // Stop anything weird happening when it's larger than list size by making it 0
-      if (patientIndex >= docPatients.size()) {
-        patientIndex = 0;
+    
+    lastCheckTime = millis();
+    
+    // If we have patients to check (list is not empty)
+    if (!docPatients.isEmpty()) {
+      // Reset index if it's out of bounds (go back to first)
+      if (currentPatientIndex >= docPatients.size()) {
+        currentPatientIndex = 0;
       }
-
-      // Current patient...
-      Patient p = docPatients.get(patientIndex);
-      // If they are in a bed and not healed
-      if (p.occupiedBed != null && !p.calcHealed()) {
-        // Set the target position beside the patient
+      
+      // Get the current patient and move index to next patient for next time
+      Patient p = docPatients.get(currentPatientIndex);
+      currentPatientIndex = (currentPatientIndex + 1) % docPatients.size(); // Use % so it doesn't go out of index
+      
+      // If patient has a bed, go examine them
+      if (p.occupiedBed != null) {
         targetX = p.xPos - 15;
         targetY = p.yPos - 15;
         movingToPatient = true;
         currentPatient = p;
-      } else {
-        // If there is no bed, skip to someone else
-        patientIndex++;
-        if (patientIndex >= docPatients.size()) {
-          patientIndex = 0;
-        }
       }
     }
-
-    drawPerson(); // Just always draw the doctor
+    drawPerson();
   }
 }
