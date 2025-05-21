@@ -57,8 +57,8 @@ class Patient extends Person {
 
     void moveToTarget() {
         if (movingToTarget) {
-            xPos = lerp(xPos, targetX, moveSpeed);
-            yPos = lerp(yPos, targetY, moveSpeed);
+            xPos = lerp(xPos, targetX, moveSpeed * speedFactor);
+            yPos = lerp(yPos, targetY, moveSpeed * speedFactor);
 
             if (dist(xPos, yPos, targetX, targetY) < 1) {
                 xPos = targetX;

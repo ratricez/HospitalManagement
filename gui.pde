@@ -107,6 +107,10 @@ public void EnergyReset(GButton source, GEvent event) { //_CODE_:ResetEnergy:324
 
 } //_CODE_:ResetEnergy:324541:
 
+public void speedfactor(GSlider source, GEvent event) { //_CODE_:speedFactoree:307611:
+  speedFactor = source.getValueF();
+} //_CODE_:speedFactoree:307611:
+
 
 
 // Create all the GUI controls. 
@@ -116,7 +120,7 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Sketch Window");
-  window1 = GWindow.getWindow(this, "Control Window", 0, 0, 320, 320, JAVA2D);
+  window1 = GWindow.getWindow(this, "Control Window", 0, 0, 320, 360, JAVA2D);
   window1.noLoop();
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw1");
@@ -161,10 +165,20 @@ public void createGUI(){
   DoctorsLabel = new GLabel(window1, 20, 180, 104, 20);
   DoctorsLabel.setText("Num. of Doctors");
   DoctorsLabel.setOpaque(false);
-  ResetEnergy = new GButton(window1, 20, 260, 100, 40);
+  ResetEnergy = new GButton(window1, 20, 260, 100, 50);
   ResetEnergy.setText("Shift Change");
   ResetEnergy.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   ResetEnergy.addEventHandler(this, "EnergyReset");
+  speedFactoree = new GSlider(window1, 130, 280, 100, 40, 10.0);
+  speedFactoree.setShowValue(true);
+  speedFactoree.setLimits(1.0, 0.5, 2.0);
+  speedFactoree.setNumberFormat(G4P.DECIMAL, 2);
+  speedFactoree.setOpaque(false);
+  speedFactoree.addEventHandler(this, "speedfactor");
+  label2 = new GLabel(window1, 130, 260, 80, 20);
+  label2.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  label2.setText("Speed Factor");
+  label2.setOpaque(false);
   window1.loop();
 }
 
@@ -182,3 +196,5 @@ GButton bedConfirm;
 GLabel BedsLabel; 
 GLabel DoctorsLabel; 
 GButton ResetEnergy; 
+GSlider speedFactoree; 
+GLabel label2; 

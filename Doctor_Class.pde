@@ -1,7 +1,6 @@
-class Doctor extends Person {
+class Doctor extends Person { //<>//
   int bedIndex;
   int lastCheckTime = 0;
-  int checkInterval = 500; // ms between checks
   int startIndex, endIndex;
   boolean Examing = false;   // Is the doctor currently examining a patient?
   int waitStartTime = 0;     // When the exam started
@@ -21,9 +20,11 @@ class Doctor extends Person {
   }
   
   void update() {
+    int checkInterval = (int)(500/speedFactor); // ms between checks
+    int adjustedExamDuration = (int)((600/energy)/speedFactor); // Have it adjusted to speed factor
     if (Examing) {  // If examination is happening
       // If we are finished an exam...
-      if (millis() - waitStartTime >= examDuration / energy) { 
+      if (millis() - waitStartTime >= adjustedExamDuration) { 
         Patient patient = currentPatient; // Get the current patient
         if (patient != null && patient.occupiedBed != null) { // As long as the patient exists and is in a bed...
           if (energy - 0.05 > 0.1) { // Reduce the doctor's energy after each exam
@@ -56,8 +57,8 @@ class Doctor extends Person {
     // Move to a patient
     if (movingToPatient) {
       // Allows smooth movement towards patient/target
-      xPos = lerp(xPos, targetX, moveSpeed);
-      yPos = lerp(yPos, targetY, moveSpeed);
+      xPos = lerp(xPos, targetX, moveSpeed * speedFactor);
+      yPos = lerp(yPos, targetY, moveSpeed * speedFactor);
       if (dist(xPos, yPos, targetX, targetY) < 1) {
         xPos = targetX;
         yPos = targetY;

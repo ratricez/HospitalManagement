@@ -1,4 +1,4 @@
-import g4p_controls.*;
+import g4p_controls.*; //<>//
 int numPatients = 0; // start off with no patients as they are added
 int numDoctors;
 int numofwaiting;
@@ -22,6 +22,7 @@ boolean simulationStarted = false; // turns true when both docSet and bedSet are
 
 int hours, mins;
 int startTime = millis();
+float speedFactor = 1.0; // Speed adjustment factor
 
 ArrayList<Integer> waitingTimes = new ArrayList<Integer>();
 int totalWaitingTime = 0;
@@ -67,7 +68,7 @@ float getRecentAverageWaitTimes(int recentSpan){
     count ++;
   }
   
-  return count > 0 ? float(total) / count : 0.0; //if count is greater than 0, return total, otherwise return 0.0
+  return count > 0 ? float(total) / count : 0.0;
   
 }
 
@@ -190,11 +191,16 @@ void draw() {
   fill(70, 70, 70);
   stroke(255);
   rect(210, 30, 100, 50, 10);
-  mins = floor((millis() - startTime) / 3000) * 10;
-  if (mins >= 60){
+  float adjustedElapsedTime = (millis() - startTime) * speedFactor; // Keep in mind our speed factor slider
+
+  mins = floor(adjustedElapsedTime / 3000) * 10;
+  if (mins >= 60 || hours >= 24){
     hours += 1;
     mins = 0;
     startTime = millis();
+    if (hours >= 24){ // 24 hour clock
+      hours = 0;
+    }
   }
   fill(255);
   textSize(28);
