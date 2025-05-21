@@ -52,7 +52,7 @@ float calculateDocAvgExhaustion(){ // function for later to calculate the averag
   }
   return total/doctors.size();
 }
-
+// Function to get the most recent waiting times 
 float getRecentAverageWaitTimes(int recentSpan){
   if(waitingTimes.isEmpty()){
      return 0.0;    
