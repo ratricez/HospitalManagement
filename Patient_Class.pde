@@ -15,8 +15,8 @@ class Patient extends Person {
     float moveSpeed = 0.02; // Controls smoothness and speed of movement
     
     //WaitingTime variables
-    int enteredWaitTime = 0;
-    int gotBedTime = 0;
+    int enteredWaitTime = 0; //when the patient enters the waiting room
+    int gotBedTime = 0; //When the patient enters a bed
     boolean timeRecorded = false;
 
     Patient(int fl, int sv) {
