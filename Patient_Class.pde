@@ -2,9 +2,10 @@ class Patient extends Person {
     Bed occupiedBed = null;
     Chair occupiedChair = null;
     boolean done = false;
+ 
     boolean exiting = false;
 
-    int base = 3; 
+    int base = 3; //base chance of 1/3
 
     int severity;
 
@@ -12,6 +13,11 @@ class Patient extends Person {
     float targetX, targetY;
     boolean movingToTarget = false;
     float moveSpeed = 0.02; // Controls smoothness and speed of movement
+    
+    //WaitingTime variables
+    int enteredWaitTime = 0;
+    int gotBedTime = 0;
+    boolean timeRecorded = false;
 
     Patient(int fl, int sv) {
         super(fl, color(100)); 
@@ -30,7 +36,10 @@ class Patient extends Person {
             this.col = color(255, 0, 0);    // Red = Emergency 
         } else {
             this.col = color(100);         // Default gray
-          }
+        }
+        
+        this.enteredWaitTime = millis();
+        
     }
 
     void goToOccupied() {
@@ -71,7 +80,6 @@ class Patient extends Person {
   
     boolean calcHealed(){
       int chanceNum = base * this.severity;
-      println(chanceNum);
       if(int(random(chanceNum)) == 0){
         return true;
       }

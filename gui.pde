@@ -25,7 +25,11 @@ public void getseverity(GCustomSlider source, GEvent event) { //_CODE_:Severity:
 public void SpawnPatient(GButton source, GEvent event) { //_CODE_:SpawnOne:691970:
     Patient newPatient = new Patient(1, severity);
     patients.add(newPatient);
-
+    numofwaiting++;
+    
+    Doctor assignedDoctor = doctors.get(nextDoctorIndex);
+    assignedDoctor.docPatients.add(newPatient);
+    nextDoctorIndex = (nextDoctorIndex + 1) % doctors.size();
 
     // Try to place in chair
     for (Chair c : chairs) {
@@ -33,7 +37,6 @@ public void SpawnPatient(GButton source, GEvent event) { //_CODE_:SpawnOne:69197
             c.occupied = true;
             newPatient.occupiedChair = c;
             waitingqueue.add(newPatient);
-            numofwaiting++;
             break;
         }
     }
@@ -43,7 +46,12 @@ public void SpawnTenPatients(GButton source, GEvent event) { //_CODE_:SpawnTen:7
     for (int i = 0; i < 10; i++){
       Patient newPatient = new Patient(1, severity);
       patients.add(newPatient);
+      numofwaiting++;
   
+      Doctor assignedDoctor = doctors.get(nextDoctorIndex);
+      assignedDoctor.docPatients.add(newPatient);
+      nextDoctorIndex = (nextDoctorIndex + 1) % doctors.size();
+
   
       // Try to place in chair
       for (Chair c : chairs) {
@@ -51,7 +59,6 @@ public void SpawnTenPatients(GButton source, GEvent event) { //_CODE_:SpawnTen:7
               c.occupied = true;
               newPatient.occupiedChair = c;
               waitingqueue.add(newPatient);
-              numofwaiting++;
               break;
           }
       }
@@ -66,15 +73,8 @@ public void numofdoctors(GCustomSlider source, GEvent event) { //_CODE_:DoctorNu
 public void confirmnumber(GButton source, GEvent event) { //_CODE_:confirmnumberdoc:567316:
   if (docSet == false){
     numDoctors = int(tempDoctorvalue);
-    int bedsPerDoctor = beds.length/numDoctors;
-    
     for (int i = 0; i< numDoctors; i++){
-      int start = (i*bedsPerDoctor);
-      int end = start+bedsPerDoctor-1;
-      if (i == numDoctors-1){
-        end = beds.length-1;
-      }
-      doctors.add(new Doctor(1, color(0, 0, 255 - i * 100), start, end));
+      doctors.add(new Doctor(1, color(0, 0, 255 - i * 30)));
     }
     docSet = true;
   }
@@ -101,6 +101,13 @@ public void confirmBedNum(GButton source, GEvent event) { //_CODE_:bedConfirm:55
   }
 } //_CODE_:bedConfirm:550370:
 
+public void EnergyReset(GButton source, GEvent event) { //_CODE_:ResetEnergy:324541:
+  for (Doctor doc : doctors) { // Drawing doctors
+    doc.energy = 1;
+  }
+
+} //_CODE_:ResetEnergy:324541:
+
 
 
 // Create all the GUI controls. 
@@ -110,7 +117,7 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Sketch Window");
-  window1 = GWindow.getWindow(this, "Window title", 0, 0, 320, 300, JAVA2D);
+  window1 = GWindow.getWindow(this, "Window title", 0, 0, 320, 320, JAVA2D);
   window1.noLoop();
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw1");
@@ -153,6 +160,9 @@ public void createGUI(){
   DoctorsLabel = new GLabel(window1, 17, 162, 104, 20);
   DoctorsLabel.setText("Num. of Doctors");
   DoctorsLabel.setOpaque(false);
+  ResetEnergy = new GButton(window1, 16, 240, 100, 40);
+  ResetEnergy.setText("Shift Change");
+  ResetEnergy.addEventHandler(this, "EnergyReset");
   window1.loop();
 }
 
@@ -169,3 +179,4 @@ GCustomSlider BedNumber;
 GButton bedConfirm; 
 GLabel BedsLabel; 
 GLabel DoctorsLabel; 
+GButton ResetEnergy; 

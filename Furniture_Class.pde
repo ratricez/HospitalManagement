@@ -8,10 +8,6 @@ class Furniture {
    this.location = p;
    this.col = c;
   }
-  
- 
- 
-
   void drawMe() {
     fill(col);
     rect(location.x, location.y, 30, 30);  // width and height of each objecct
