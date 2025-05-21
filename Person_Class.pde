@@ -11,10 +11,10 @@ class Person{
   
   void drawPerson(){
     fill(this.col);
-    rect(this.xPos - 4, this.yPos + 4, 9, 15, 25);
+    rect(this.xPos - 4, this.yPos + -3, 9, 15, 25);
     stroke(0);
     fill(this.col);
-    circle(this.xPos, this.yPos, 10);
+    circle(this.xPos, this.yPos - 7, 10);
 
   }
 }
